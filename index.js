@@ -100,7 +100,7 @@ app.all('/create_task.api', function (req, res) {
   }
   res.json({
     success: true,
-    message: 'Cool! Done!!!'
+    message: 'Nice job! Done!!!'
   });
 });
 

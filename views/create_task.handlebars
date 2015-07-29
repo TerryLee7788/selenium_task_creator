@@ -200,7 +200,8 @@
       var $this = $(this),
           $send_key = $this.next('span'),
           action_val = $this.val();
-      if (action_val === 'sendKeys') {
+
+      if (action_val === 'sendKey') {
         $send_key.html(cache_sendkeys);
       } else {
         $send_key.html('');
@@ -242,8 +243,14 @@
           var out_idx = index;
           arr[out_idx] = {};
           $(this).find('[name]').each(function (idx, target) {
-            var name = $(this).attr('name');
-            arr[out_idx][name] = $(target).val();
+            var name = $(this).attr('name'),
+                boolean_value = /(type|actions)/;
+            if (boolean_value.test(name)) {
+              var type = $(target).val();
+              arr[out_idx][type] = true;
+            } else {
+              arr[out_idx][name] = $(target).val();              
+            }
           });
         });
         // create "events" array object
@@ -266,7 +273,7 @@
     // Change event
     $obj.account.on('change', resetCheckBox);
     $obj.steps.on('change', '[name="type"]', typeOnChange);
-    $obj.steps.on('change', '[name="action"]', sendKeys);
+    $obj.steps.on('change', '[name="actions"]', sendKeys);
   });
 </script>
 {{/section}}
