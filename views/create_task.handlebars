@@ -5,7 +5,7 @@
     }
     .delete {
       float: right;
-      /*line-height: 53px;*/
+      margin-bottom: 6px;
     }
     .it_content:first-child .delete,
     .lists-content [data-name="lists"]:first-child [data-name="delete"] {
@@ -14,7 +14,8 @@
     [data-name="add"] {
       margin: 0 10px;
     }
-    #error-msg {
+    #error-msg,
+    #success-msg {
       margin: 10px 0;
       display: none;
     }
@@ -28,6 +29,9 @@
       margin-top: 14px;
       max-width: 260px;
     }
+    .sendKeys {
+      display: none;
+    }
   </style>
 {{/section}}
 
@@ -39,15 +43,21 @@
   <div id="hide" class="hide">
     {{> action}}
     {{> check}}
+    {{> sendkeys}}
   </div>
 
   <form action="/create_task" method="POST" id="task_form">
     <h2>Basic info</h2>
     <hr/>
     <div id="basic_info">
+      <div class="form-group">
+        <label for="task_name">Task name ( js file name )</label>
+        <input type="text" name="task_name" id="task_name" class="form-control" placeholder="ex: 01_reg_desktop_cover_ffn_gmail" />
+      </div>
+
       {{!-- describe main task --}}
       <div class="form-group">
-        <label for="describe">describe main task:</label>
+        <label for="describe">The structure to the test suite:</label>
         <input id="describe" type="text" name="describe" class="form-control" />
       </div>
   
@@ -69,7 +79,7 @@
       <label for="test_account">Do you use test account?</label>
       <input type="checkbox" data-target="account-content" id="test_account" name="test_account" />
 
-      <div id="account-content" class="hide">
+      <div id="account-content" data-name="account-content" class="hide">
         <div class="form-group">
           <label for="user">User name</label>
           <input type="text" id="user" name="user" class="form-control" />
@@ -97,6 +107,7 @@
     </div>
   </form>
   <div class="alert alert-danger" role="alert" id="error-msg"></div>
+  <div class="alert alert-success" role="alert" id="success-msg"></div>
 </div>
 
 {{#section 'jquery'}}
@@ -105,7 +116,8 @@
     var tasks = tasks || {},
         $task_form = $('#task_form'),
         $hide = $('#hide'),
-        $msg = $('#error-msg'),
+        $err_msg = $('#error-msg'),
+        $suc_msg = $('#success-msg'),
         $obj = {
           btn:       $task_form.find('#btn'),
           describe:  $task_form.find('#describe'),
@@ -119,13 +131,14 @@
         cache_step = $obj.steps.html(),
         cache_action = $hide.find('.action').html(),
         cache_check = $hide.find('.check').html(),
+        cache_sendkeys = $hide.find('.sendKeys').html(),
         cache_list = $obj.steps.find('.lists-content').html(),
     disableBtn = function (data) {
       if (data.success) {
         $obj.btn.text('Created');
-        $msg.text(data.message);
+        $suc_msg.text(data.message).fadeIn().delay(3000).fadeOut();
       } else {
-        $msg.text(data.message).fadeIn(1500, function () {
+        $err_msg.text(data.message).fadeIn(1500, function () {
           $obj.btn.prop('disabled', true);
         }).delay(3000).fadeOut(1500, function () {
           $obj.btn.prop('disabled', false);
@@ -178,31 +191,32 @@
           data_action = $this.data('name');
 
       if (data_action === 'add') {
-          $lists.after(cache_list);
+        $lists.after(cache_list);
       } else {
         $lists.remove();
       }
     },
     sendKeys = function () {
       var $this = $(this),
-          $sendKeys = $this.next('[data-name="sendKeys"]'),
+          $send_key = $this.next('span'),
           action_val = $this.val();
       if (action_val === 'sendKeys') {
-        $sendKeys.show();
+        $send_key.html(cache_sendkeys);
       } else {
-        $sendKeys.hide().val('');
+        $send_key.html('');
       }
     },
-    accountOnChange = function () {
+    resetCheckBox = function () {
+      var $this = $(this),
+          target = $this.data('target');
       // reset account value
-      if (!$(this).prop("checked")) {
-        $('#account-content').find('input').each(function (idx, tar) {
+      if (!$this.prop("checked")) {
+        $('[data-name="'+ target +'"]').find('input').each(function (idx, tar) {
           $(tar).val('');
         });
       }
     },
     renderData = function () {
-      // $task_form.find('[name]').each(function (idx, tar) {
       $('#basic_info').find('[name]').each(function (idx) {
         var $this = $(this),
             cur_name = $this.attr('name'),
@@ -221,9 +235,8 @@
             it_name = $current.attr('name'),
             it_des = $current.val(),
             arr = []; // "arr" array reset
-        
+
         tasks.config.it[outer_idx] = {};
-        tasks.config.it[outer_idx][it_name] = it_des;
 
         $(this).find('[data-name="lists"]').each(function (index) {
           var out_idx = index;
@@ -233,8 +246,9 @@
             arr[out_idx][name] = $(target).val();
           });
         });
-        // the "events" array object
+        // create "events" array object
         tasks.config.it[outer_idx]["events"] = arr;
+        tasks.config.it[outer_idx][it_name] = it_des;
       });
       console.log(tasks.config);
     };
@@ -250,7 +264,7 @@
     $obj.steps.on('click', '.type_content [data-name="add"], .type_content [data-name="delete"]', addOrDeleteList);
 
     // Change event
-    $obj.account.on('change', accountOnChange);
+    $obj.account.on('change', resetCheckBox);
     $obj.steps.on('change', '[name="type"]', typeOnChange);
     $obj.steps.on('change', '[name="action"]', sendKeys);
   });

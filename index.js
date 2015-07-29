@@ -32,12 +32,40 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function renderToString (source, data) {
-  var json = {
-        data: data
-      },
-      template = new hb.ExpressHandlebars().handlebars.compile(source),
-      out_put = template(json);
+  var template = new hb.ExpressHandlebars().handlebars.compile(source),
+      out_put = template(data);
   return  out_put;
+}
+function checkFields (data) {
+  // check main object keys value
+  for (var i in data) {
+    if (data[i] === '') {
+      return false;
+    }
+    if (i === 'it') {
+      var j = data[i].length;
+      for (var k = 0; k < j; k++) {
+        // check "it" array object keys value
+        for (var l in data[i][k]) {
+          if (data[i][k][l] === '') {
+            return false;
+          }
+          if (l === 'events') {
+            var h = data[i][k][l].length;
+            // check "events" array object keys value
+            for (var g = 0; g < h; g++) {
+              for (var f in data[i][k][l][g]) {
+                if (data[i][k][l][g][f] === '') {
+                  return false;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return true;
 }
 
 // set routes
@@ -46,15 +74,10 @@ app.all('/', function (req, res) {
 });
 
 app.all('/create_task.api', function (req, res) {
-  var check = true;
+  var check;
   req.accepts(['html', 'json']);
+  check = checkFields(req.body);
 
-  for (var i in req.body) {
-    if (req.body[i] === '') {
-      check = false;
-      break;
-    }
-  }
   if (!check) {
     res.json({
       error: true,
@@ -69,7 +92,8 @@ app.all('/create_task.api', function (req, res) {
       var source = data.toString(),
           code = renderToString(source, req.body);
 
-      fs.writeFile('./js_tmp/test.js', code, function (err) {
+      // fs.writeFile('./js_tmp/test.js', code, function (err) {
+      fs.writeFile('./js_tmp/' + req.body.task_name + '.js', code, function (err) {
         if (err) { return console.log(err); }
       });
     });
