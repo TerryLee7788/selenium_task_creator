@@ -1,5 +1,5 @@
 ## selenium task creator
-jsut for fun
+just for fun
 
 請先 `npm install`, then `node index`
 
