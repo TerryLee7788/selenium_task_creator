@@ -74,7 +74,10 @@ app.all('/', function (req, res) {
 });
 
 app.all('/create_task.api', function (req, res) {
-  var check;
+  var check,
+      js_file = req.body.task_name + '.js',
+      json_file = req.body.task_name + '.json',
+      json_code = JSON.stringify(req.body);
   req.accepts(['html', 'json']);
   check = checkFields(req.body);
 
@@ -92,8 +95,13 @@ app.all('/create_task.api', function (req, res) {
       var source = data.toString(),
           code = renderToString(source, req.body);
 
-      // fs.writeFile('./js_tmp/test.js', code, function (err) {
-      fs.writeFile('./js_tmp/' + req.body.task_name + '.js', code, function (err) {
+      // create js file
+      fs.writeFile('./js_tmp/' + js_file, code, function (err) {
+        if (err) { return console.log(err); }
+      });
+
+      // create json file
+      fs.writeFile('./json_tmp/' + json_file, json_code, function (err) {
         if (err) { return console.log(err); }
       });
     });

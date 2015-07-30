@@ -1,12 +1,18 @@
 <span class="check">
-  functions 
-  <select name="functions">
-    <option value="elementIsVisible">elementIsVisible</option>
-    <option value="elementTextContains">elementTextContains</option>
-    <option value="titleContains">titleContains</option>
-  </select>
-  keys
-  <input type="text" name="functions_keys" />
-  <button data-name="add" class="btn btn-primary btn-xs">Add</button>
-  <button data-name="delete" class="btn btn-danger btn-xs">Delete</button>
+  <label>
+    functions
+    <select name="functions" data-action="check">
+      <option value="elementIsVisible">elementIsVisible</option>
+      <option value="elementTextContains">elementTextContains</option>
+      <option value="titleContains">titleContains</option>
+    </select>
+    <span></span>
+  </label>
+
+  <label>
+    Target/keys:
+    <input type="text" name="functions_keys" />
+    <button data-move="add" class="btn btn-primary btn-xs">Add</button>
+    <button data-move="delete" class="btn btn-danger btn-xs">Delete</button>
+  </label>
 </span>
