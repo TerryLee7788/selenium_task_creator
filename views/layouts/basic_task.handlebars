@@ -6,22 +6,10 @@ test.describe('{{describe}}', function() {
       driver,
 
   tryAsyn = function (done) {
-    var timer = 2000,
-        second = (timer / 1000);
-    console.log('{{describe}} test will start after ' + second + ((second >= 10) ? (' seconds') : (' second')) );
-
-    // if a function is asyn, simply accept a callback argument
+    var timer = 2000;
     setTimeout(done, timer);
-    // Test will started after "timer" seconds
-  },
-  checkTitle = function (title) {
-    return until.titleContains(title);
   };
 
-  /*****
-   * specify the timeout on the test
-   * or you can just ("mocha test.js --timeout 15000" / "mocha test.js -t 15000")
-   *****/
   this.timeout(current_timer);
 
   test.before(function () {
@@ -36,26 +24,38 @@ test.describe('{{describe}}', function() {
 
   test.beforeEach(tryAsyn);
 
-  test.afterEach(function () {
-    console.log('{{describe}} test end');
-  });
-
   test.it('fullscreen', function () {
-    // set full screen
     driver.manage().window().maximize();
   });
 
+  test.it('open url', function () {
+    driver.get(url + lang);
+  });{{!--
+--}}
 {{#each it}}
-  // Start test details
   test.it('{{it_name}}', function () { {{!--
 --}}{{#each events}}
-    {{!--
+    {{#if basic}}{{!--
+  --}}{{#if reg}}reg{{/if}}{{!--
+  --}}{{#if login}}login{{/if}}{{!--
+  --}}{{#if order}}order{{/if}}{{!--
+--}}{{/if}}{{!--
+
   --}}{{#if action}}{{!--
-    --}}action{{!--
+    --}}{{#if click}}{{!--
+      --}}driver.findElement(By.name('{{findElement}}')).click();{{!--
+    --}}{{/if}}{{!--
+
+    --}}{{#if sendKey}}{{!--
+      --}}driver.findElement(By.name('{{findElement}}')).sendKeys(['{{sendKeys}}']);{{!--
+    --}}{{/if}}{{!--
+
+    --}}{{#if clear}}{{!--
+      --}}driver.findElement(By.name('{{findElement}}')).clear();{{!--
+    --}}{{/if}}{{!--
   --}}{{/if}}{{!--
-  --}}{{!--
+
   --}}{{#if check}}{{!--
-  --}}{{!-- check --}}{{!--
     --}}{{#if elementIsVisible}}{{!--
         --}}driver.wait(until.elementIsVisible(driver.findElement(By.id("{{functions_keys}}"))), 2000);{{!--
     --}}{{/if}}{{!--
@@ -70,26 +70,5 @@ test.describe('{{describe}}', function() {
   --}}{{/if}}{{!--
 --}}{{/each}}
   });
-{{/each}}{{!--
-   test.it('Try to open google web', function() {
-
-    // set full screen
-    driver.manage().window().maximize();
-    
-    // Go the "url" page
-    driver.get(url + lang);
-
-    // try to checking things
-    driver.findElement(By.name('q')).sendKeys(['webdriver' + Key.ESCAPE]);
-    
-    // The "click" means "mouse click"
-    driver.findElement(By.name('btnK')).click();
-    
-    driver.wait(checkTitle('webdriver'), 5000, 'checking title end.');
-    driver.getTitle().then(function (title) {
-      console.log('Current page title: ' + title);
-    });
-
-  }); 
-  --}}
+{{/each}}
 });

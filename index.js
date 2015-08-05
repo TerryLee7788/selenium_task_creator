@@ -117,7 +117,17 @@ app.all('/load_task', function (req, res) {
 });
 
 app.all('/edit_task', function (req, res) {
-  res.render('edit_task');
+  var js_file = [];
+  // fs.readdirSync(path), return an array
+  fs.readdirSync('./js_tmp').filter(function (file) {
+    return file.substr(-3) === '.js';
+  }).forEach(function (file) {
+    js_file.push(file);
+  });
+
+  res.render('edit_task', {
+    files: js_file
+  });
 });
 
 app.all('/create_task', function (req, res) {

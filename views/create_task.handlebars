@@ -14,6 +14,9 @@
     [data-move="add"] {
       margin: 0 10px;
     }
+    .it_name label {
+      width: 100%;
+    }
     #error-msg,
     #success-msg {
       margin: 10px 0;
@@ -32,69 +35,79 @@
     .sendKeys {
       display: none;
     }
+    #add,
+    #btn {
+      min-width: 99px;
+    }
+    .type_content label {
+      padding: 0 10px;
+    }
+    .type_content label input[type="checkbox"] {
+      margin: 0;
+      vertical-align: middle;
+    }
   </style>
 {{/section}}
 
-<div class="starter-template">
-  <div class="page-header">
-    <h1>Create task page</h1>    
-  </div>
-
-  <div id="hide" class="hide">
-    {{> action}}
-    {{> check}}
-    {{> sendkeys}}
-  </div>
-
-  <form action="/create_task" method="POST" id="task_form">
-    <h2>Basic info</h2>
-    <hr/>
-    <div id="basic_info">
-      <div class="form-group">
-        <label for="task_name">Task name ( js file name )</label>
-        <input type="text" name="task_name" id="task_name" class="form-control" placeholder="ex: 01_reg_desktop_cover_ffn_gmail" />
-      </div>
-
-      {{!-- describe main task --}}
-      <div class="form-group">
-        <label for="describe">The structure to the test suite:</label>
-        <input id="describe" type="text" name="describe" class="form-control" />
-      </div>
-  
-      {{!-- the url --}}
-      <div class="form-group">
-        <label for="url">The url:</label>
-        <input id="url" type="text" name="url" class="form-control" />
-      </div>
-  
-      {{!-- The language --}}
-      <p>
-        <label for="lang">
-          The language:
-          {{> langs}}
-        </label>
-      </p>
-  
-      {{!-- Test account and password --}}
-      {{!-- {{> account}} --}}
-    </div>{{!-- basic_info end --}}
-  
-    <hr/>
-    <h2>Create Steps</h2>
-    <hr/>
-  
-    <div id="create_step">
-      {{!-- Basic step --}}
-      {{> basic_step}}
-    </div>
-  
-    <div class="btn-toolbar"><button type="button" id="add" class="btn btn-primary">Add Steps</button></div>
-    <div class="btn-toolbar"><button id="btn" type="submit" class="btn btn-default">Create task</button>
-    </div>
-  </form>
-  <div class="alert alert-danger" role="alert" id="error-msg"></div>
-  <div class="alert alert-success" role="alert" id="success-msg"></div>
+<div class="page-header">
+  <h1>Create task page</h1>    
 </div>
+
+<div id="hide" class="hide">
+  {{> action}}
+  {{> check}}
+  {{> sendkeys}}
+  {{> basic}}
+</div>
+
+<form action="/create_task" method="POST" id="task_form">
+  <h2>Basic info</h2>
+  <hr/>
+  <div id="basic_info">
+    <div class="form-group">
+      <label for="task_name">Task name ( js file name )</label>
+      <input type="text" name="task_name" id="task_name" class="form-control" placeholder="ex: 01_reg_desktop_cover_ffn_gmail" />
+    </div>
+
+    {{!-- describe main task --}}
+    <div class="form-group">
+      <label for="describe">The structure to the test suite:</label>
+      <input id="describe" type="text" name="describe" class="form-control" />
+    </div>
+
+    {{!-- the url --}}
+    <div class="form-group">
+      <label for="url">The url:</label>
+      <input id="url" type="text" name="url" class="form-control" />
+    </div>
+
+    {{!-- The language --}}
+    <p>
+      <label for="lang">
+        The language:
+        {{> langs}}
+      </label>
+    </p>
+
+    {{!-- Test account and password --}}
+    {{> account}}
+  </div>{{!-- basic_info end --}}
+
+  <hr/>
+  <h2>Create Steps</h2>
+  <hr/>
+
+  <div id="create_step">
+    {{!-- Basic step --}}
+    {{> basic_step}}
+  </div>
+
+  <div class="btn-toolbar"><button type="button" id="add" class="btn btn-primary">Add Steps</button></div>
+  <div class="btn-toolbar"><button id="btn" type="submit" class="btn btn-default">Create task</button>
+  </div>
+</form>
+<div class="alert alert-danger" role="alert" id="error-msg"></div>
+<div class="alert alert-success" role="alert" id="success-msg"></div>
 
 {{#section 'jquery'}}
 <script>
@@ -117,6 +130,7 @@
         cache_step = $obj.steps.html(),
         cache_action = $hide.find('.action').html(),
         cache_check = $hide.find('.check').html(),
+        cache_basic = $hide.find('.basic').html(),
         cache_sendkeys = $hide.find('.sendKeys').html(),
         cache_list = $obj.steps.find('.lists-content').html(),
     disableBtn = function (data) {
@@ -160,14 +174,25 @@
     },
     typeOnChange = function () {
       var $this = $(this),
+          $type_content = $this.parent('label').next('.type_content'),
           val = $this.val(),
-          $type_content = $this.parent('label').next('.type_content');
+          html = '';
 
-      if (val === 'action') {
-        $type_content.html(cache_action);
-      } else {
-        $type_content.html(cache_check);
-      }
+        switch(val) {
+          case 'action':
+            html = cache_action;
+            break;
+          case 'check':
+            html = cache_check;
+            break;
+          case 'basic':
+            html = cache_basic;
+            break;
+          default:
+            html = cache_action;
+            break;
+        }
+        $type_content.html(html);
     },
     addOrDeleteList = function (e) {
       e.preventDefault();
@@ -230,15 +255,21 @@
         $(this).find('[data-tag="lists"]').each(function (index) {
           var out_idx = index;
           arr[out_idx] = {};
+
           $(this).find('[name]').each(function (idx, target) {
             var name = $(this).attr('name'),
+                val = $(target).val(),
+                basic_item = /^(reg|order|login)$/,
                 boolean_value = /^(type|actions|functions)$/;
 
             if (boolean_value.test(name)) {
-              var type = $(target).val();
-              arr[out_idx][type] = true;
+              arr[out_idx][val] = true;
+            } else if (basic_item.test(name)) {
+              if ($(target).prop('checked')) {
+                arr[out_idx][name] = $(target).prop('checked');
+              }
             } else {
-              arr[out_idx][name] = $(target).val();              
+              arr[out_idx][name] = val;                
             }
           });
         });
