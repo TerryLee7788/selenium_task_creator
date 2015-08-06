@@ -1,9 +1,17 @@
 {{#section 'style'}}
   <link rel="stylesheet" href="../dist/css/task.css">
+  <style>
+    .glyphicon {
+      font-size: 24px;
+    }
+    .nav_back {
+      float: left;
+      margin: 10px 0 0 6px;
+    }
+  </style>
 {{/section}}
-
 <div class="page-header">
-  <h1>Create task page</h1>
+  <h3>Edit task name: {{file}}</h3>
 </div>
 
 {{> hide}}
@@ -13,20 +21,19 @@
   <hr/>
   <div id="basic_info">
     <div class="form-group">
-      <label for="task_name">Task name ( js file name )</label>
-      <input type="text" name="task_name" id="task_name" class="form-control" placeholder="ex: 01_reg_desktop_cover_ffn_gmail" />
+      <input type="hidden" name="task_name" value="{{json.task_name}}" />
     </div>
 
     {{!-- describe main task --}}
     <div class="form-group">
       <label for="describe">The structure to the test suite:</label>
-      <input id="describe" type="text" name="describe" class="form-control" />
+      <input id="describe" type="text" value="{{json.describe}}" name="describe" class="form-control" />
     </div>
 
     {{!-- the url --}}
     <div class="form-group">
       <label for="url">The url:</label>
-      <input id="url" type="text" name="url" class="form-control" />
+      <input id="url" type="text" name="url" value="{{json.url}}" class="form-control" />
     </div>
 
     {{!-- The language --}}
@@ -51,7 +58,7 @@
   </div>
 
   <div class="btn-toolbar"><button type="button" id="add" class="btn btn-primary">Add Steps</button></div>
-  <div class="btn-toolbar"><button id="btn" type="submit" class="btn btn-default">Create task</button>
+  <div class="btn-toolbar"><button id="btn" type="submit" class="btn btn-default">Save task</button>
   </div>
 </form>
 <div class="alert alert-danger" role="alert" id="error-msg"></div>
@@ -59,4 +66,7 @@
 
 {{#section 'jquery'}}
   <script src="../lib/task.js"></script>
+  <script>
+    
+  </script>
 {{/section}}

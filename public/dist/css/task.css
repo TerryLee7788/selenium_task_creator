@@ -1,0 +1,46 @@
+.it_content {
+  position: relative;
+}
+.delete {
+  float: right;
+  margin-bottom: 6px;
+}
+.it_content:first-child .delete,
+.lists-content [data-tag="lists"]:first-child [data-move="delete"] {
+  display: none;
+}
+[data-move="add"] {
+  margin: 0 10px;
+}
+.it_name label {
+  width: 100%;
+}
+#error-msg,
+#success-msg {
+  margin: 10px 0;
+  display: none;
+}
+#test_account:checked + #account-content {
+  display: block !important;
+}
+.btn-toolbar+.btn-toolbar {
+  margin-top: 10px;
+}
+#account-content {
+  margin-top: 14px;
+  max-width: 260px;
+}
+.sendKeys {
+  display: none;
+}
+#add,
+#btn {
+  min-width: 99px;
+}
+.type_content label {
+  padding: 0 10px;
+}
+.type_content label input[type="checkbox"] {
+  margin: 0;
+  vertical-align: middle;
+}
