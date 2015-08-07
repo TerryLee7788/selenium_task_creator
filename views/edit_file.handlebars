@@ -67,6 +67,9 @@
 {{#section 'jquery'}}
   <script src="../lib/task.js"></script>
   <script>
-    
+    $(function () {
+      var obj = {{{json json}}};
+      console.log(obj);
+    });
   </script>
 {{/section}}

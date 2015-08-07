@@ -9,6 +9,9 @@ var express    = require('express'),
           if(!this._sections) { this._sections = {}; }
           this._sections[name] = options.fn(this);
           return null;
+        },
+        json: function (context) {
+          return JSON.stringify(context);
         }
       }
     }),
