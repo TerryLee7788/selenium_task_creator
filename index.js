@@ -12,9 +12,19 @@ var express    = require('express'),
         },
         json: function (context) {
           return JSON.stringify(context);
+        },
+        selected: function (partial, by) {
+          var txt     = fs.readFileSync(__dirname + '/views/partials/' + partial + '.handlebars').toString(),
+              loc     = txt.indexOf(by) + by.length + 1,
+              start   = txt.slice(0, loc ),
+              end     = txt.slice(loc , txt.length),
+              new_txt = start + ' selected' + end;
+
+          return new_txt;
         }
       }
     }),
+    hb_compile = new hb.ExpressHandlebars().handlebars.compile,
     app = express();
 
 app.set('port', process.env.PORT || 3000);
@@ -39,7 +49,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 function renderToString (source, data) {
-  var template = new hb.ExpressHandlebars().handlebars.compile(source),
+  var template = hb_compile(source),
       out_put = template(data);
   return  out_put;
 }
@@ -167,6 +177,7 @@ app.all('/edit_task/:file', function (req, res) {
   var file = req.params.file,
       json_name = file.replace('.js', '') + '.json',
       json_data = JSON.parse(fs.readFileSync('./json_tmp/' + json_name).toString());
+
   res.render('edit_file', {
     file: file,
     json: json_data

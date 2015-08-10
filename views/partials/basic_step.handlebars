@@ -1,29 +1,29 @@
-    {{!-- Basic step --}}
-    <div class="it_content">
-      {{!-- describe it task --}}
-      <p class="it_name">
-        <button class="delete btn btn-danger btn-sm">Delete Step</button>
-        <label>
-          Identifies each individual tests:
-          <input type="text" name="it_name"class="form-control"/>
-        </label>
-      </p>
+{{!-- Basic step --}}
+<div class="it_content">
+  {{!-- describe it task --}}
+  <p class="it_name">
+    <button class="delete btn btn-danger btn-sm">Delete Step</button>
+    <label>
+      Identifies each individual tests:
+      <input type="text" name="it_name"class="form-control"/>
+    </label>
+  </p>
 
-      <div class="lists-content">
-        <p data-tag="lists">
-          <label>
-            type:
-            <select name="type">
-              <option value="action">action</option>
-              <option value="check">check</option>
-              <option value="basic">basic</option>
-            </select>
-          </label>
-        
-          <span class="type_content">
-            {{> action}}
-          </span>
-        </p>
-      </div>
-      <hr/>
-    </div>
+  <div class="lists-content">
+    <p data-tag="lists">
+      <label>
+        type:
+        <select name="type">
+          <option value="action">action</option>
+          <option value="check">check</option>
+          <option value="basic">basic</option>
+        </select>
+      </label>
+    
+      <span class="type_content">
+        {{> action}}
+      </span>
+    </p>
+  </div>
+  <hr/>
+</div>

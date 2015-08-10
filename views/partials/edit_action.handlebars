@@ -1,0 +1,78 @@
+{{#if action}}
+  <span class="action">
+    {{!-- findElement --}}
+    <label>
+      <span>
+        findElement: <input type="text" name="findElement" placeholder="Enter an Element" />
+      </span>
+    </label>
+
+    {{!-- By --}}
+    <label>
+      <span>
+        by:
+        {{{selected 'select_by' by }}}        
+      </span>
+    </label>
+
+    {{!-- select actions --}}
+    <label>
+      <span>
+        actions:
+        <select name="actions" data-action="actions">
+          <option value="">Selcet action</option>
+          <option value="click">click</option>
+          <option value="sendKey">sendKey</option>
+          <option value="clear">clear</option>
+        </select>
+        <span></span>
+      </span>
+    </label>
+
+    {{> btns}}
+  </span>
+{{/if}}
+
+{{#if check}}
+  <span class="check">
+    <label>
+      functions
+      <select name="functions" data-action="check">
+        <option value="elementIsVisible">elementIsVisible</option>
+        <option value="elementTextContains">elementTextContains</option>
+        <option value="titleContains">titleContains</option>
+      </select>
+      <span></span>
+    </label>
+
+    {{#if elementTextContains}}
+      {{> sendkeys}}
+    {{/if}}
+
+    <label>
+      Keys:
+      <input type="text" name="functions_keys" value="{{functions_keys}}" />
+    </label>
+
+    {{> btns}}
+  </span>
+{{/if}}
+
+{{#if basic}}
+  <span class="basic">
+    <label>
+      <input type="checkbox" name="login" />
+      Login
+    </label>
+    <label>
+      <input type="checkbox" name="order" />
+      Order
+    </label>
+    <label>
+      <input type="checkbox" name="reg" />
+      Registration
+    </label>
+
+    {{> btns}}
+  </span>
+{{/if}}

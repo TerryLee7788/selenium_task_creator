@@ -1,0 +1,32 @@
+{{!-- Basic step --}}
+<div class="it_content">
+  {{!-- describe it task --}}
+  {{#each json.it}}
+    <p class="it_name">
+      <button class="delete btn btn-danger btn-sm">Delete Step</button>
+      <label>
+        Identifies each individual tests:
+        <input type="text" name="it_name"class="form-control" value="{{it_name}}"/>
+      </label>
+    </p>
+    {{#each events}}
+      <div class="lists-content">
+        <p data-tag="lists">
+          <label>
+            type:
+            <select name="type">
+              <option value="action"{{#if action}} selected{{/if}}>action</option>
+              <option value="check"{{#if check}} selected{{/if}}>check</option>
+              <option value="basic"{{#if basic}} selected{{/if}}>basic</option>
+            </select>
+          </label>
+
+          <span class="type_content">
+            {{> edit_action}}
+          </span>
+        </p>
+      </div>
+    {{/each}}
+  {{/each}}
+  <hr/>
+</div>

@@ -43,15 +43,15 @@ test.describe('{{describe}}', function() {
 
   --}}{{#if action}}{{!--
     --}}{{#if click}}{{!--
-      --}}driver.findElement(By.name('{{findElement}}')).click();{{!--
+      --}}driver.findElement(By.{{by}}('{{findElement}}')).click();{{!--
     --}}{{/if}}{{!--
 
     --}}{{#if sendKey}}{{!--
-      --}}driver.findElement(By.name('{{findElement}}')).sendKeys(['{{sendKeys}}']);{{!--
+      --}}driver.findElement(By.{{by}}('{{findElement}}')).sendKeys(['{{sendKeys}}']);{{!--
     --}}{{/if}}{{!--
 
     --}}{{#if clear}}{{!--
-      --}}driver.findElement(By.name('{{findElement}}')).clear();{{!--
+      --}}driver.findElement(By.{{by}}('{{findElement}}')).clear();{{!--
     --}}{{/if}}{{!--
   --}}{{/if}}{{!--
 
