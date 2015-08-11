@@ -147,7 +147,7 @@ $(function () {
           var name = $(this).attr('name'),
               val = $(target).val(),
               basic_item = /^(reg|order|login)$/,
-              boolean_value = /^(type|actions|functions)$/;
+              boolean_value = /^(type)$/;
 
           if (boolean_value.test(name)) {
             arr[out_idx][val] = true;
@@ -156,7 +156,7 @@ $(function () {
               arr[out_idx][name] = $(target).prop('checked');
             }
           } else {
-            arr[out_idx][name] = val;                
+            arr[out_idx][name] = val;
           }
         });
       });
